@@ -1,0 +1,41 @@
+deskwork/
+├── backend/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── api/
+│   │   │   ├── missions.py
+│   │   │   └── user.py
+│   │   ├── models/
+│   │   ├── schemas/
+│   │   ├── db.py
+│   │   └── duckdb_utils.py
+│   ├── requirements.txt
+│   └── Dockerfile
+├── frontend/
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── assets/
+│   │   │   └── missions/cafe/*.csv
+│   │   ├── components/
+│   │   │   ├── OfficeScene.tsx
+│   │   │   ├── Workstation.tsx
+│   │   │   ├── Spreadsheet.tsx
+│   │   │   ├── SqlLab.tsx
+│   │   │   ├── PythonLab.tsx
+│   │   │   └── VizStudio.tsx
+│   │   ├── hooks/
+│   │   │   ├── useGameState.ts
+│   │   │   └── useApi.ts
+│   │   ├── pages/
+│   │   │   ├── Home.tsx
+│   │   │   └── Mission01.tsx
+│   │   ├── App.tsx
+│   │   └── index.tsx
+│   ├── tsconfig.json
+│   ├── package.json
+│   └── vite.config.ts
+├── assets/
+│   └── models/
+└── README.md
