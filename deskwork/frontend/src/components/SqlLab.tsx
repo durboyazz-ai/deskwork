@@ -1,49 +1,50 @@
 import { useState } from 'react';
+import axios from 'axios';
 import MonacoEditor from '@monaco-editor/react';
 
-export const SqlLab = ({ missionId }: { missionId: number }) => {
-  const [code, setCode] = useState("SELECT * FROM sales LIMIT 5;");
+export default function SqlLab({ missionId }: { missionId: number }) {
+  const [query, setQuery] = useState("SELECT * FROM sales LIMIT 10;");
   const [result, setResult] = useState<any[]>([]);
   const [error, setError] = useState("");
 
-  const runQuery = async () => {
+  const run = async () => {
     try {
-      const res = await fetch(`/api/missions/${missionId}/sql`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: code }),
-      });
-      if (!res.ok) throw new Error(await res.text());
-      const data = await res.json();
-      setResult(data.rows);
+      const res = await axios.post(`/api/missions/${missionId}/sql`, { query });
+      setResult(res.data.rows);
       setError("");
     } catch (e: any) {
-      setError(e.message);
+      setError(e.response?.data?.detail || e.message);
     }
   };
 
   return (
-    <div className="sql-lab">
+    <div style={{ height:"100%", display:"flex", flexDirection:"column" }}>
       <MonacoEditor
-        height="300px"
-        defaultLanguage="sql"
-        value={code}
-        onChange={(v) => setCode(v ?? "")}
+        language="sql"
+        value={query}
+        onChange={(v)=>setQuery(v||'')}
+        options={{ fontSize:14, minimap:{enabled:false} }}
+        theme="vs-dark"
+        style={{ height:"40%" }}
       />
-      <button onClick={runQuery}>Run</button>
-      {error && <p className="error">{error}</p>}
-      <table>
-        <thead>
-          <tr>{result[0] && Object.keys(result[0]).map(k => <th key={k}>{k}</th>)}</tr>
-        </thead>
-        <tbody>
-          {result.map((row, i) => (
-            <tr key={i}>
-              {Object.values(row).map((v, j) => <td key={j}>{v}</td>)}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <button onClick={run}>Run</button>
+      {error && <pre style={{color:'red'}}>{error}</pre>}
+      <div style={{ flex:1, overflow:"auto" }}>
+        {result.length>0 ? (
+          <table border={1} cellPadding={4}>
+            <thead>
+              <tr>{Object.keys(result[0]).map(k=><th key={k}>{k}</th>)}</tr>
+            </thead>
+            <tbody>
+              {result.map((row,i)=>(
+                <tr key={i}>{Object.values(row).map(v=> <td key={v}>{v}</td>)}</tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No results</p>
+        )}
+      </div>
     </div>
   );
-};
+}
