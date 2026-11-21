@@ -1,4 +1,5 @@
 5. Running the Prototype
+
 5.1 Prerequisites
 Docker (for the backend + DB)
 Node.js v20+ (for the frontend)
