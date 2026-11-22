@@ -1,6 +1,6 @@
 ## 5. Running the Prototype
 
-### 5.1 Prerequisites
+## 5.1 Prerequisites
 
 - **Docker** (for the backend + DB)
 - **Node.js v20+** (for the frontend)
@@ -11,3 +11,36 @@
 
 ```bash
 docker compose up --build
+```
+
+PostgreSQL will be exposed on localhost:5432.
+
+FastAPI will start on http://localhost:8000.
+
+The React dev server runs on http://localhost:5173 and proxies /api/* to the backend.
+
+Why Docker?
+
+It guarantees a clean, repeatable environment. You can also run it in CI for automated tests.
+
+## 5.3 Manual (no Docker)
+###  start DB locally (PostgreSQL)
+`psql -U postgres -h localhost`
+
+### create database
+`createdb deskworks`
+
+### backend
+```bash
+cd backend
+pip install -r requirements.txt
+alembic upgrade head   # run migrations
+uvicorn app.main:app --reload
+```
+
+### frontend
+```bash
+cd ../frontend
+npm ci
+npm run dev
+```
